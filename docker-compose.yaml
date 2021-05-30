@@ -1,0 +1,47 @@
+version: '3.1'
+services:
+  postgres:
+    image: postgres
+    restart: 'always'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: salayna
+      POSTGRES_PASSWORD: salayna
+      POSTGRES_DB: artfelt
+    volumes:
+      - artfeltdata:/var/lib/postgres
+
+  adminer:
+    image: adminer
+    restart: 'always'
+    ports:
+      - 8080:8080
+
+  api:
+    restart: 'always'
+    build: .
+    volumes:
+      - /usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '7701:7701'
+    depends_on:
+      - postgres
+    environment:
+      - NODE_ENV=production
+      - PORT=7701
+      - JWT_SECRET=MySecretPass
+      - TYPEORM_CONNECTION=postgres
+      - TYPEORM_HOST=postgres
+      - TYPEORM_PORT=5432
+      - TYPEORM_USERNAME=salayna
+      - TYPEORM_PASSWORD=salayna
+      - TYPEORM_DATABASE=artfelt
+      - TYPEORM_AUTO_SCHEMA_SYNC=artfelt
+      - TYPEORM_SYNCHRONIZE=false
+      - TYPEORM_ENTITIES=build/Entities/*.entity.js
+      - TYPEORM_SUBSCRIBERS=build/subscriber/**/*.js
+      - TYPEORM_MIGRATIONS=build/Migrations/**/*.migration.js
+volumes:
+  artfeltdata:

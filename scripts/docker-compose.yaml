@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: salayna
+      POSTGRES_PASSWORD: salayna
+      POSTGRES_DB: quest
+    volumes:
+      - devquestdata:/var/lib/postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+volumes:
+  devquestdata:
